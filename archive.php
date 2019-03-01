@@ -43,5 +43,5 @@ echo paginate_links();
 
 
 <?php
-get_sidebar();
+
 get_footer();

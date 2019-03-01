@@ -34,7 +34,6 @@ if ( ! function_exists( 'fictionaluniversity_setup' ) ) :
 		 * provide it for us.
 		 */
 		add_theme_support( 'title-tag' );
-
 		/*
 		 * Enable support for Post Thumbnails on posts and pages.
 		 *
