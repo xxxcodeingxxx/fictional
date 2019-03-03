@@ -41,6 +41,11 @@ if ( ! function_exists( 'fictionaluniversity_setup' ) ) :
 		 */
 		add_theme_support( 'post-thumbnails' );
 
+		// Enable New Custom Image Sizes
+		add_image_size( 'professorLandscape', 400, 260, true );
+		add_image_size( 'prfessorPortrait', 480, 650, true );
+		add_image_size( 'pageBanner', 1500, 350, true );
+
 		// This theme uses wp_nav_menu() in one location.
 		register_nav_menus( array(
 			'menu-1' => esc_html__( 'Primary', 'fictionaluniversity' ),
@@ -84,8 +89,40 @@ if ( ! function_exists( 'fictionaluniversity_setup' ) ) :
 endif;
 add_action( 'after_setup_theme', 'fictionaluniversity_setup' );
 
+function pageBanner( $args = NULL ) {
+	if ( !$args['title'] ) {
+		$args['title'] = get_the_title();
+	}
+
+	if ( !$args['subtitle'] ) {
+		$args['subtitle'] = get_field( 'page_banner_subtitle' );
+	}
+
+	if ( !$args['photo'] ) {
+		if ( get_field( 'page_banner_background_image' ) ) {
+			$args['photo'] = get_field( 'page_banner_background_image' )['sizes']['pageBanner'];
+		} else {
+			$args['photo'] = get_theme_file_uri( '/images/ocean.jpg' );
+		}
+	}
+	?>
+	<div class="page-banner">
+	<div class="page-banner__bg-image" style="background-image: url(<?php echo $args['photo'] ?>);"></div>
+	<div class="page-banner__content container container--narrow">
+	<h1 class="page-banner__title"><?php echo $args['title']; ?></h1>
+	<div class="page-banner__intro">
+		<p><?php echo $args['subtitle']; ?></p>
+	</div>
+	</div>
+	</div>
+<?php }
+
 
 function fictional_adjust_queries($query) {
+	if( !is_admin() AND is_post_type_archive( 'campus' ) AND $query->is_main_query() ) {
+		$query->set( 'posts_per_page', -1 );
+	}
+
 	if( !is_admin() AND is_post_type_archive( 'program' ) AND $query->is_main_query() ) {
 		$query->set( 'orderby', 'title' );
 		$query->set( 'order', 'ASC' );
@@ -150,6 +187,7 @@ function fictionaluniversity_scripts() {
 	wp_enqueue_style( 'google-fonts', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i' );
 	wp_enqueue_script(' fictionaluniversity-javascripts ', get_theme_file_uri( '/js/scripts-bundled.js' ), NULL, '1.0', true );
 	wp_enqueue_style( 'fictionaluniversity-style', get_stylesheet_uri() );
+	wp_enqueue_script( 'googleMap', '//maps.googleapis.com/maps/api/js?key=AIzaSyAIjLxqaGKNYW4Tjp6XQbIKEGjPiXRtf0Q', NULL, '1.0', false );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -183,3 +221,10 @@ require get_template_directory() . '/inc/customizer.php';
 if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
+
+function fictionaluniversityMapKey($api) {
+	$api['key'] = 'AIzaSyAIjLxqaGKNYW4Tjp6XQbIKEGjPiXRtf0Q';
+	return $api;
+}
+
+add_filter( 'acf/fields/google_map/api', 'fictionaluniversityMapKey' );

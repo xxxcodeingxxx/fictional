@@ -36,7 +36,7 @@ class GMap {
 
     // center map
     this.center_map( map );
-  
+
     } // end new_map
 
     add_marker( $marker, map ) {
