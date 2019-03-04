@@ -7,6 +7,20 @@
  * @package Fictional_University
  */
 
+ require get_theme_file_path('/inc/search-route.php');
+
+ // Customize WordPress Rest API
+
+ function university_custom_rest() {
+	 register_rest_field('post', 'authorName', array(
+		 'get_callback' => function() {return get_the_author();}
+	 )); // You can register as many fields as you like!!
+ }
+
+add_action( 'rest_api_init', 'university_custom_rest' );
+
+
+
 if ( ! function_exists( 'fictionaluniversity_setup' ) ) :
 	/**
 	 * Sets up theme defaults and registers support for various WordPress features.
@@ -189,9 +203,11 @@ function fictionaluniversity_scripts() {
 	wp_enqueue_style( 'fictionaluniversity-style', get_stylesheet_uri() );
 	wp_enqueue_script( 'googleMap', '//maps.googleapis.com/maps/api/js?key=AIzaSyAIjLxqaGKNYW4Tjp6XQbIKEGjPiXRtf0Q', NULL, '1.0', false );
 
+
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
+
 }
 add_action( 'wp_enqueue_scripts', 'fictionaluniversity_scripts' );
 
