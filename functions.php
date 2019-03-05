@@ -57,7 +57,7 @@ if ( ! function_exists( 'fictionaluniversity_setup' ) ) :
 
 		// Enable New Custom Image Sizes
 		add_image_size( 'professorLandscape', 400, 260, true );
-		add_image_size( 'prfessorPortrait', 480, 650, true );
+		add_image_size( 'professorPortrait', 480, 650, true );
 		add_image_size( 'pageBanner', 1500, 350, true );
 
 		// This theme uses wp_nav_menu() in one location.

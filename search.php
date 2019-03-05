@@ -8,6 +8,7 @@
  */
 
 get_header();
+pageBanner();
 ?>
 
 	<section id="primary" class="content-area">
@@ -51,5 +52,5 @@ get_header();
 	</section><!-- #primary -->
 
 <?php
-get_sidebar();
+
 get_footer();

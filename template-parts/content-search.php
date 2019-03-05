@@ -10,6 +10,8 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+	<div class="row">
+		<div class="container">
 	<header class="entry-header">
 		<?php the_title( sprintf( '<h2 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h2>' ); ?>
 
@@ -22,13 +24,18 @@
 		</div><!-- .entry-meta -->
 		<?php endif; ?>
 	</header><!-- .entry-header -->
-
-	<?php fictionaluniversity_post_thumbnail(); ?>
-
-	<div class="entry-summary">
-		<?php the_excerpt(); ?>
-	</div><!-- .entry-summary -->
-
+</div> <!-- end of container -->
+<div class="row">
+	<div class="col-6 float-left">
+		<?php the_post_thumbnail('professorPortrait'); ?>
+	</div>
+	<div class="col-6 float-right">
+		<div class="entry-summary">
+			<?php the_excerpt(); ?>
+		</div><!-- .entry-summary -->
+	</div> <!-- end of row -->
+	</div>
+</div>
 	<footer class="entry-footer">
 		<?php fictionaluniversity_entry_footer(); ?>
 	</footer><!-- .entry-footer -->
