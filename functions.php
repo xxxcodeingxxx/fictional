@@ -202,6 +202,7 @@ function fictionaluniversity_scripts() {
 	wp_enqueue_script(' fictionaluniversity-javascripts ', get_theme_file_uri( '/js/scripts-bundled.js' ), NULL, '1.0', true );
 	wp_enqueue_style( 'fictionaluniversity-style', get_stylesheet_uri() );
 	wp_enqueue_script( 'googleMap', '//maps.googleapis.com/maps/api/js?key=AIzaSyAIjLxqaGKNYW4Tjp6XQbIKEGjPiXRtf0Q', NULL, '1.0', false );
+  
 
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -244,3 +245,49 @@ function fictionaluniversityMapKey($api) {
 }
 
 add_filter( 'acf/fields/google_map/api', 'fictionaluniversityMapKey' );
+
+
+// Redirects subscriber accounts to front end of website bypassing dashboard
+function redirectSubsToFrontend() {
+  $ourCurrentUser = wp_get_current_user();
+
+  if(count($ourCurrentUser->roles) == 1 AND $ourCurrentUser->roles[0] == 'subscriber') {
+    wp_redirect(site_url('/'));
+    exit;
+  }
+}
+
+add_action('admin_init', 'redirectSubsToFrontend');
+
+// Removes admin bar from logged in subscribers on frontend of site
+function noSubsAdminBar() {
+  $ourCurrentUser = wp_get_current_user();
+
+  if(count($ourCurrentUser->roles) == 1 AND $ourCurrentUser->roles[0] == 'subscriber') {
+    show_admin_bar(false);
+
+  }
+}
+
+add_action('wp_loaded', 'noSubsAdminBar');
+
+
+// Customize Login Screen
+add_filter('login_headerurl', 'ourHeaderUrl');
+
+function ourHeaderUrl() {
+  return esc_url(site_url('/'));
+}
+
+
+add_action('login_enqueue_scripts', 'ourLoginCSS');
+
+function ourLoginCSS() {
+  	wp_enqueue_style( 'fictionaluniversity-style', get_stylesheet_uri() );
+    wp_enqueue_style( 'google-fonts', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i' );
+}
+
+function my_login_logo_url_title() {
+    return get_bloginfo('name');
+}
+add_filter( 'login_headertitle', 'my_login_logo_url_title' );
